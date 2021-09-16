@@ -9,39 +9,25 @@ class Personnage
     private $_degats = 0;
     private $_niveau = 0;
 
-    public function __construct(string $nom, int $force = 50, int $degats = 0)
+    const FORCE_PETITE = 20;
+    const FORCE_MOYENNE = 50;
+    const FORCE_GRANDE = 80;
+
+    private static $_texteADire = 'La partie est démarrée. Qui veut se battre !';
+    private static $_nbreJoueurs = 0;
+
+    public function __construct(array $ligne)
     {
-        $this->setNom($nom);
-        $this->setForce($force);
-        $this->setDegats($degats);
-        $this->setExperience(1);
+        $this->hydrate($ligne);
+        self::$_nbreJoueurs++;
         print("Le personnage " . $nom . " est créé </br>");
     }
-    public function setId(int $id): Personnage
+    public function hydrate(array $ligne)
     {
-        if (!is_int($id)) {
-            trigger_error('L\'id d\'un personnage doit être un entier', E_USER_ERROR);
-            return $this;
-        }
-        $this->_id = $id
-        return $this
-    }
-    public function getId(int $id): Personnage
-    {
-        return $this->_id
-    }
-    public function setNiveau(int $niveau): Personnage
-    {
-        if (!is_int($niveau)) {
-            trigger_error('Le niveau d\'un personnage doit être un entier', E_USER_ERROR);
-            return $this;
-        }
-        $this->_niveau = $nieau
-        return $this
-    }
-    public function getNiveau(int $niveau): Personnage
-    {
-        return $this->_niveau
+        $this->setNom($ligne['nom']);
+        $this->setForce((int)$ligne['forces']);
+        $this->setDegats($ligne['degats']);
+        $this->setExperience(1);
     }
 
     public function __toString():string
@@ -49,6 +35,35 @@ class Personnage
         return $this->getNom() . " : Force = ".$this.getForce()." / Force = ".$this.getDegats()." / Force = ".$this.getExperience();
 
     }
+
+    public function setId(int $id): Personnage
+    {
+        if (!is_int($id)) {
+            trigger_error('L\'id d\'un personnage doit être un entier', E_USER_ERROR);
+            return $this;
+        }
+        $this->_id = $id;
+        return $this;
+    }
+    public function getId(int $id): Personnage
+    {
+        return $this->_id;
+    }
+    public function setNiveau(int $niveau): Personnage
+    {
+        if (!is_int($niveau)) {
+            trigger_error('Le niveau d\'un personnage doit être un entier', E_USER_ERROR);
+            return $this;
+        }
+        $this->_niveau = $nieau;
+        return $this;
+    }
+    public function getNiveau(int $niveau): Personnage
+    {
+        return $this->_niveau;
+    }
+
+
 
     public function setNom(string $nom):Personnage
     {
@@ -73,8 +88,13 @@ class Personnage
             trigger_error('La force d\'un personnage ne peut pas dépasser 100', E_USER_WARNING);
             return $this;
         }
-        $this->_force = $force;
-        return $this;
+            if (in_array($force, array(self::FORCE_PETITE, self::FORCE_MOYENNE, self::FORCE_GRANDE))) {
+                $this->_force = $force;
+            } else {
+                trigger_error('La force n\'est pas correcte', E_USER_ERROR);
+                return $this;
+            }
+            return $this;
     }
     public function getForce():int
     {
@@ -120,20 +140,17 @@ class Personnage
         return $this->_experience;
     }
 
-    public function parler():Personnage
+    public static function parler()
     {
-        print('Je suis un personnage!');
-        return $this;
+        print('<br/><br/>Je suis le personnage n°' . self::$_nbreJoueurs . ' <br/>' . self::$_texteADire . '<br/>');
     }
 
-    public function frapper(Personnage $adversaire):Personnage
-    {
-            $adversaire->_degats += $this->_force;
+        public function frapper(Personnage $persoAFrapper): Personnage
+        {
+            $persoAFrapper->_degats += $this->_force;
             $this->gagnerExperience();
-            print('</br>' . $adversaire->getNom() . ' à été frappé par '
-                . $this . ' -> Dégats de ' . $adversaire . ' = ' . $adversaire->getDegats());
-                return $this;
-
-    }
+            print('<br/> ' . $persoAFrapper->getNom() . ' a été frappé par ' . $this->getNom());
+            return $this;
+        }
 
 }
