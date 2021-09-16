@@ -2,10 +2,12 @@
 
 class Personnage
 {
+    private $_id = 0;
     private $_nom = 'Inconnu';
     private $_force = 50;
     private $_experience = 1;
     private $_degats = 0;
+    private $_niveau = 0;
 
     public function __construct(string $nom, int $force = 50, int $degats = 0)
     {
@@ -15,6 +17,33 @@ class Personnage
         $this->setExperience(1);
         print("Le personnage " . $nom . " est créé </br>");
     }
+    public function setId(int $id): Personnage
+    {
+        if (!is_int($id)) {
+            trigger_error('L\'id d\'un personnage doit être un entier', E_USER_ERROR);
+            return $this;
+        }
+        $this->_id = $id
+        return $this
+    }
+    public function getId(int $id): Personnage
+    {
+        return $this->_id
+    }
+    public function setNiveau(int $niveau): Personnage
+    {
+        if (!is_int($niveau)) {
+            trigger_error('Le niveau d\'un personnage doit être un entier', E_USER_ERROR);
+            return $this;
+        }
+        $this->_niveau = $nieau
+        return $this
+    }
+    public function getNiveau(int $niveau): Personnage
+    {
+        return $this->_niveau
+    }
+
     public function __toString():string
     {
         return $this->getNom() . " : Force = ".$this.getForce()." / Force = ".$this.getDegats()." / Force = ".$this.getExperience();
