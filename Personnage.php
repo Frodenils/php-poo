@@ -20,19 +20,21 @@ class Personnage
     {
         $this->hydrate($ligne);
         self::$_nbreJoueurs++;
-        print("Le personnage " . $nom . " est créé </br>");
+        print("Le personnage " . (string)$ligne['nom'] . " est créé </br>");
     }
     public function hydrate(array $ligne)
     {
-        $this->setNom($ligne['nom']);
-        $this->setForce((int)$ligne['forces']);
-        $this->setDegats($ligne['degats']);
-        $this->setExperience(1);
+        foreach ($ligne as $key => $value){
+            $method ='set'.ucfirst($key);
+            if (method_exists($this, $method)){
+                $this->setNom($value);
+            }
+        }
     }
 
     public function __toString():string
     {
-        return $this->getNom() . " : Force = ".$this.getForce()." / Force = ".$this.getDegats()." / Force = ".$this.getExperience();
+        return $this->getNom() . " : Force = ".$this.getForce()." / Force = ".$this.getDegats()." / Force = ".$this.getExperience()." / Niveau = ".$this.getNiveau();
 
     }
 
@@ -45,7 +47,7 @@ class Personnage
         $this->_id = $id;
         return $this;
     }
-    public function getId(int $id): Personnage
+    public function getId(): Personnage
     {
         return $this->_id;
     }
@@ -55,10 +57,10 @@ class Personnage
             trigger_error('Le niveau d\'un personnage doit être un entier', E_USER_ERROR);
             return $this;
         }
-        $this->_niveau = $nieau;
+        $this->_niveau = $niveau;
         return $this;
     }
-    public function getNiveau(int $niveau): Personnage
+    public function getNiveau():int
     {
         return $this->_niveau;
     }
