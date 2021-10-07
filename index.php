@@ -1,7 +1,8 @@
 <?php
 
-function chargerClasse(string $classe){
-    include $classe.'.php';
+function chargerClasse(string $classe)
+{
+    include $classe . '.php';
 }
 
 spl_autoload_register('chargerClasse');
@@ -11,18 +12,28 @@ include "conf.php";
 try {
     $db = new PDO($dsn, $user, $password);
     $personnagesManager = new PersonnagesManager($db);
-/*     $db->setAttribute(PDO::ATTR_EMULATE_PREPARES,false);
-    if ($db){
-        print('</br>Lecture dans la base de donnée :</br>');
-        $request = $db->query('SELECT id, nom, `forces`, degats, niveau, experience FROM personnages;');
-        while ($ligne = $request->fetch(PDO::FETCH_ASSOC)) {
-            # code...
-            $perso = new Personnage($ligne);
-            print('<br/>'.$perso->getNom().' a '.$perso->getForce(). ' de force, '. 
-            $perso->getDegats().' de dégâts, '.$perso->getExperience(). 'd\'experience et est au niveau '.$perso->getNiveau().'</br>'); 
-        }
+
+    $unMagicien = new Magicien(
+        [
+            'id'=>7,
+            'nom'=>'Gandalf',
+            'force'=>20,
+        ]);
+        $unAutrePerso = new Magicien(
+            [
+                'id'=>8,
+                'nom'=>'Les godasses',
+                'force'=>20,
+            ]);
+            $combat = new TerrainDeCombat();
+            lancerUnCombat($unMagicien, $unAutrePerso);
+    $persos = $personnagesManager->getList();
+
+    foreach ($persos as $perso) {
+        print('<br/>' . $perso->getNom() . ' a ' . $perso->getForce() . ' de force, ' .
+            $perso->getDegats() . ' de dégâts, ' . $perso->getExperience() . 'd\'experience et est au niveau ' . $perso->getNiveau() . '</br>');
     }
-    */
-} catch (PDOException $e){
-    print('</br>Erreur de connexion : '.$e->getMessage());
+
+} catch (PDOException $e) {
+    print('</br>Erreur de connexion : ' . $e->getMessage());
 }
