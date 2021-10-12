@@ -1,15 +1,17 @@
 <?php
-
 class Magicien extends Personnage
 {
     private $_magie;
 
-    public function lancerUnSort(Personnage $persoAFrapper): Personnage
+    public function attaquer(Personnage $persoAFrapper): Personnage
     {
-//    $perso->recevoirDegats($this->_magie);
         $persoAFrapper->_degats += $this->_magie;
-        parent::frapper($persoAFrapper);
+
         return $this;
     }
 
+    public function insulter()
+    {
+        print("<br>MAGICIEN : Lèche moi le diams !<br>");
+    }
 }
